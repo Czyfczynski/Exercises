@@ -4,6 +4,13 @@
 #include "30010_io.h"
 
 char readJoystick(int8_t *f){
+ 
+    uint8_t right = GPIOC -> IDR & (0x0001) << 0;
+    uint8_t up = GPIOA -> IDR & (0x0001) << 4;
+    uint8_t center = GPIOB -> IDR & (0x0001) << 5;
+    uint8_t left = GPIOC -> IDR & (0x0001) << 1;
+    uint8_t down = GPIOB -> IDR & (0x0001) << 0;
+
 
  
 RCC->AHBENR |= RCC_AHBPeriph_GPIOA; //Enable clock for GPIO Port A
