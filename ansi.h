@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include "Joystick.h"
 #define ESC 0x1B
 
 #define FIX14_SHIFT 14
@@ -23,6 +24,7 @@ void printBall(uint32_t r, uint32_t c);
 void deleteball(uint32_t r, uint32_t c);
 void windowgame(uint8_t h, uint8_t b, uint8_t r1, uint8_t c1);
 void printhits(int16_t i, int8_t h);
-
+void printTimer(void);
+void printsplit(struct Timer *split,uint8_t statevec);
 
 #endif

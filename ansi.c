@@ -215,7 +215,7 @@ void windowgame(uint8_t h, uint8_t b, uint8_t r1, uint8_t c1){  //Opretter en fu
     int8_t i;                                                   //En tom tælle variable
 
     gotoxy(r1,c1);                                              // Går til vindues øvre venstre hjørne
-    printf("%c",201);                                           // Printer hjørnet
+    printf("%c",201);                                           // Printer hjørnet (201)
 
     for (i=1;i<b;i++){                                          //For loop til at udføre øvre side af vindue
 
@@ -296,3 +296,10 @@ void printhits(int16_t i, int8_t h){
     printf("%d",i);                                             //Printer hit count
 }
 
+void printTimer(void){
+    printf("Timer : %.2d:%.2d:%.2d.%.2d\n",Stopwatch.hrsCount, Stopwatch.minCount,Stopwatch.sekCount,Stopwatch.hunCount);
+}
+
+void printsplit(struct Timer *split,uint8_t statevec){
+    printf("Split %d : %.2d:%.2d:%.2d.%.2d\n",statevec-2,split->hrsCount, split->minCount,split->sekCount,split->hunCount);
+}

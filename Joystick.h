@@ -1,5 +1,6 @@
 #ifndef _JOYSTICK_H_
 #define _JOYSTICK_H_
+
 // Definerer global struct
 struct Timer{
     int8_t hrsCount;
@@ -10,12 +11,13 @@ struct Timer{
 
 struct Timer Stopwatch;
 
-void init(struct Timer *Stopwatch);
+void initJoy(void);
+void resetWatch(struct Timer *Stopwatch);
 void initTimer(void);
 void TIM_2_IRQHandler(void);
-void printTimer(void);
 
-char readJoystick(int8_t *f);
+uint8_t readJoystick(void);
 char setLed(uint8_t value);
-
+char Timerinput(uint8_t value, struct Timer *split);
+char readTerminal(void);
 #endif
