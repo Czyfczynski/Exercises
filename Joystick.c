@@ -2,6 +2,7 @@
 #include "Joystick.h"
 #include "stm32f30x_conf.h"
 #include "30010_io.h"
+#include <string.h>
 
 void initJoy(void){
     RCC->AHBENR |= RCC_AHBPeriph_GPIOA; //Enable clock for GPIO Port A
@@ -320,7 +321,7 @@ case 5:
 }
 }
 
-char readTerminal(void){
+/*char readTerminal(void){
     char textArray[];                   // Definerer tomt text array
     uart_clear();                       // Clearer bufferen
 
@@ -328,4 +329,45 @@ char readTerminal(void){
     textArray = uart_get_char();        //
     textArray[uart_get_count()+1] = 0;  // Sætter det sidste element i textArray til 0
     return text;
+}*/
+
+void readKeyboard(char *str, int8_t *p){
+    char temp;
+    temp = uart_get_char();
+
+    if (temp != 0){
+        str[(*p)] = temp;
+        (*p)++;
+    }
+}
+
+int8_t stringCompare(char* key){
+
+    char start[] = "start", stop[] = "stop", split1[] = "split1", split2[] = "split2", reset[] = "reset", help[] = "help";
+    int8_t result;
+
+    // comparing strings
+
+    if (strcmp(key,start) == 0){
+        printf("start");
+    }
+
+    if (strcmp(key,stop) == 0){
+        printf("stop");
+    }
+
+    if (strcmp(key,split1) == 0){
+        printf("split1");
+    }
+
+    if (strcmp(key,split2) == 0){
+        printf("split2");
+    }
+
+    if (strcmp(key,reset) == 0){
+        printf("reset");
+    }
+    if (strcmp(key,help) == 0){
+        printf("start");
+    }
 }
