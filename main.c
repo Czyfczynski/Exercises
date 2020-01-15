@@ -17,10 +17,8 @@
 #include "ansi.h"
 #include <stdio.h>
 #include "calc.h"
-
-
-
-
+#include <string.h>
+#include <stdlib.h>
 
 int main(void)
 {
@@ -28,6 +26,10 @@ int main(void)
     struct Timer split;
     int32_t r,c,i,h,w,vr,vc,l;
     uint8_t swr,swc,f,statevec,oldstatevec;
+    int8_t p;
+    char key[20];                                               // Opretter string med 20 elementer
+    memset(key, 0, 20*sizeof(key[0]));                          //
+
     uart_init(9600);                                            //Initialize USB serial at 9600 baud
     initJoy();
     resetWatch(&Stopwatch);
@@ -51,28 +53,42 @@ int main(void)
 //    setBall(&b,r,c,vr,vc);                                      //Definerer boldens start position
 //    shiftPos(&b,&r,&c);                                         //Ændre r og c til 32.0 så printfunktion kan læse dem
 //    printBall(r,c);                                             //Printer boldens start position
-    gotoxy(1,1);
-    readTerminal();
-    while(1){                                                   //Loop der køre uendligt
-//        statevec = readJoystick();
-//        if(statevec != oldstatevec){
-//
-//            Timerinput(statevec,&split);
-//
-//        if (statevec == 3){
-//            gotoxy(2,1);
-//            printsplit(&split, statevec);
-//
-//        }
-//        if (statevec == 4){
-//            gotoxy(3,1);
-//            printsplit(&split, statevec);
-//
-//        }
-//
-//
-//        }
-//        oldstatevec = statevec;
+    gotoxy(0,0);
+    //readTerminal();
+    while(1){
+        gotoxy(1,1);
+        printTimer();
+
+
+
+        readKeyboard(key, &p);
+            if (key[p-1]==0x0D){
+                key[p-1] = 0;
+
+                //printf("%s",key);
+                p = 0;
+            }
+
+            stringCompare(key);
+
+        if(statevec != oldstatevec){
+
+            Timerinput(statevec,&split);
+
+        if (statevec == 3){
+            gotoxy(2,1);
+            printsplit(&split, statevec);
+
+        }
+        if (statevec == 4){
+            gotoxy(3,1);
+            printsplit(&split, statevec);
+
+        }
+
+
+        }
+        oldstatevec = statevec;
 ////        moveBall(&b,l);                                             //Flytter bolden til dens næste position
 ////        i = collision(&b,i,h,w,swr,swc);                            //Tjækker om bolden remmer en væg og tæller i i hvis den gør
 ////        deleteball(r,c);                                            //sletter boldens forrigen position
@@ -81,7 +97,6 @@ int main(void)
 ////        printhits(i,h);                                             //Printer hit count
 ////        gotoxy(30,30);
 //    gotoxy(1,1);
-//    printTimer();
 
     }
 }

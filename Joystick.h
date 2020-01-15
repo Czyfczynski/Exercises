@@ -20,4 +20,6 @@ uint8_t readJoystick(void);
 char setLed(uint8_t value);
 char Timerinput(uint8_t value, struct Timer *split);
 char readTerminal(void);
+void readKeyboard(char *str, int8_t *p);
+int8_t stringCompare(char* key);
 #endif

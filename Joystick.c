@@ -2,6 +2,7 @@
 #include "Joystick.h"
 #include "stm32f30x_conf.h"
 #include "30010_io.h"
+#include <string.h>
 
 void initJoy(void){
     RCC->AHBENR |= RCC_AHBPeriph_GPIOA; //Enable clock for GPIO Port A
@@ -243,7 +244,7 @@ void initTimer(void){
 
     NVIC_SetPriority(28,1);   // set interrupt priority
     NVIC_EnableIRQ(28);              // Enable interrupt
-    TIM2->CR1 |= (0x01 << 0);       // Starts the timer
+//    TIM2->CR1 |= (0x01 << 0);       // Starts the timer
 }
 
 void resetWatch(struct Timer *Stopwatch){
@@ -275,57 +276,86 @@ void TIM2_IRQHandler(void){
 
 char Timerinput(uint8_t value, struct Timer *split){
 
+    switch(value){
 
+    case 1:
+        initTimer();
+        break;
 
-switch(value){
+    case 2:
+        resetWatch(&Stopwatch);
+        break;
 
-case 1:
+    case 3:
+        split->hunCount = Stopwatch.hunCount;
+        split->sekCount = Stopwatch.sekCount;
+        split->minCount = Stopwatch.minCount;
+        split->hrsCount = Stopwatch.hrsCount;
+        break;
 
-    initTimer();
-    break;
+    case 4:
+        split->hunCount = Stopwatch.hunCount;
+        split->sekCount = Stopwatch.sekCount;
+        split->minCount = Stopwatch.minCount;
+        split->hrsCount = Stopwatch.hrsCount;
+        break;
 
-
-case 2:
-
-   resetWatch(&Stopwatch);
-
-    break;
-
-case 3:
-
-    split->hunCount = Stopwatch.hunCount;
-    split->sekCount = Stopwatch.sekCount;
-    split->minCount = Stopwatch.minCount;
-    split->hrsCount = Stopwatch.hrsCount;
-
-    break;
-
-case 4:
-
-    split->hunCount = Stopwatch.hunCount;
-    split->sekCount = Stopwatch.sekCount;
-    split->minCount = Stopwatch.minCount;
-    split->hrsCount = Stopwatch.hrsCount;
-
-    break;
-
-case 5:
-//    NVIC_EnableIRQ(0);
-    TIM2->CR1 ^= (0x01 << 0);
-
-
-
-    break;
+    case 5:
+    //    NVIC_EnableIRQ(0);
+        TIM2->CR1 ^= (0x01 << 0);
+        break;
 
 }
 }
 
-char readTerminal(void){
-    char textArray[];                   // Definerer tomt text array
-    uart_clear();                       // Clearer bufferen
+void readKeyboard(char *str, int8_t *p){
+    char temp;
+    temp = uart_get_char();
 
-    textArray[uart_get_count()+1];      // Ændrer antal elementer i array til antal indtastninger +1 (til 0)
-    textArray = uart_get_char();        //
-    textArray[uart_get_count()+1] = 0;  // Sætter det sidste element i textArray til 0
-    return text;
+    if (temp != 0){
+        str[(*p)] = temp;
+        (*p)++;
+    }
+}
+
+int8_t stringCompare(char* key){
+
+    char start[] = "start", stop[] = "stop", split1[] = "split1", split2[] = "split2", reset[] = "reset", help[] = "help";
+
+    // comparing strings
+
+    if (strcmp(key,start) == 0){
+        TIM2->CR1 |= (0x01 << 0);               // Enables timer
+    }
+
+    if (strcmp(key,stop) == 0){
+        TIM2->CR1 &= ~(0x01 << 0);
+    }
+
+    if (strcmp(key,split1) == 0)
+        //printsplit(&split,3);
+
+
+    if (strcmp(key,split2) == 0){
+        printf("split2");
+    }
+
+
+
+    if (strcmp(key,reset) == 0){
+        resetWatch(&Stopwatch);                 // resets clock
+        RCC->APB1ENR |= RCC_APB1Periph_TIM2;    // Enable clock
+        TIM2->CR1 = 0x0000;                     // Configure timer 2
+        TIM2->ARR = 0x9C3FF;                    // Set reload value (64000)
+        TIM2->PSC = 0x00;                       // Set prescale value
+
+        TIM2->DIER |=0x0001;                    // Enables timer 2 interrupts.
+
+        NVIC_SetPriority(28,1);
+        NVIC_EnableIRQ(28);
+    }
+    if (strcmp(key,help) == 0){
+            gotoxy(2,1);
+        printf("You stupid");
+    }
 }
