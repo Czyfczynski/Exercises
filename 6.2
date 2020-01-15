@@ -1,0 +1,50 @@
+void readKeyboard(char *str, int8_t *p){
+    char temp;
+    temp = uart_get_char();
+    if (temp != 0){
+        str[(*p)] = temp;
+        (*p)++;
+    }
+
+}
+
+int8_t stringCompare(char* key){
+
+    char start[] = "start", stop[] = "stop", split1[] = "split1", split2[] = "split2", reset[] = "reset", help[] = "help";
+    int8_t result;
+
+    // comparing strings
+    if (strcmp(key,start) == 0){
+        printf("start");
+    }
+    if (strcmp(key,stop) == 0){
+        printf("stop");
+    }
+    if (strcmp(key,split1) == 0){
+        printf("split1");
+    }
+    if (strcmp(key,split2) == 0){
+        printf("split2");
+    }
+    if (strcmp(key,reset) == 0){
+        printf("reset");
+    }
+    if (strcmp(key,help) == 0){
+        printf("start");
+    }
+
+}
+
+
+
+
+
+        readKeyboard(key, &p);
+        if (key[p-1]==0x0D){
+            key[p-1] = 0;
+            //printf("%s",key);
+            p = 0;
+        }
+        stringCompare(key);
+
+
